@@ -1,0 +1,56 @@
+<%=javascript_include_tag :application %>
+<%- model_class = Product -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:purschasername) %></th>
+      <th><%= model_class.human_attribute_name(:itemdescription) %></th>
+      <th><%= model_class.human_attribute_name(:itemprice) %></th>
+      <th><%= model_class.human_attribute_name(:purchasecount) %></th>
+      <th><%= model_class.human_attribute_name(:merchantaddress) %></th>
+      <th><%= model_class.human_attribute_name(:merchantname) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @products.each do |product| %>
+      <tr>
+        <td><%= link_to product.id, product_path(product) %></td>
+        <td><%= product.purschasername %></td>
+        <td><%= product.itemdescription %></td>
+        <td><%= product.itemprice %></td>
+        <td><%= product.purchasecount %></td>
+        <td><%= product.merchantaddress %></td>
+        <td><%= product.merchantname %></td>
+        <td><%=l product.created_at %></td>
+        <td>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_product_path(product), :class => 'btn btn-default' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              product_path(product),
+              :method => :delete,
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<div class="alert alert-info">
+Total Gross Revenue <%=@total %>
+</div>
+
+<h3>Import a CSV File</h3>
+  <%= form_tag import_products_path, multipart: true do %>
+    <%= file_field_tag :file %>
+    <%= submit_tag "Importar Arquivo" %>
+<% end %>
+
+<%= link_to t('.new', :default => t("helpers.button_import_csv")),
+            new_product_path,
+            :class => 'btn btn-primary' %>
